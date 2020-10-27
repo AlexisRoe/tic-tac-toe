@@ -1,12 +1,10 @@
 import './square.css';
 import React, { useState } from 'react';
 
-export default function Square(/* { value } */) {
-    const [value, setValue] = useState(Array(9).fill(null));
-
+export default function Square(props) {
     return (
-        <button className='square' onClick={() => {setValue("🧞‍♂️")}}>
-            {value}
+        <button className='square' onClick={() => props.onClick()}>
+            {props.value}
         </button>
     );
 }

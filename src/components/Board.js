@@ -3,22 +3,30 @@ import React, { useState } from 'react';
 import Square from './Square';
 
 export default function Board() {
-    // const [squares, setSquares] = useState(Array(9).fill(null));
+    const [squares, setSquares] = useState(Array(9).fill(null));
+    const [xIsNext, setxIsNext] = useState(true);
+    const winner = calculateWinner(squares);
+    let status;
 
-    // function handleClick(i) {
-    //     const newSquares = squares.slice();
-    //     newSquares[i] = '🧞‍♂️';
-    //     setSquares(newSquares);
-    // }
+    if (winner) {
+        status = "Winner is" + winner;
+    } else {
+        status = 'Next player:' + (xIsNext ? '🧞‍♂️' : '🧜🏻‍♀️');
+    }
+
+    function handleClick(i) {
+        if (calculateWinner(squares) || squares[i]) return;
+        const newsquares = squares.slice();
+        newsquares[i] = xIsNext ? '🧞‍♂️' : '🧜🏻‍♀️';
+        setSquares(newsquares);
+        setxIsNext(!xIsNext);
+    }
 
     function renderSquare(i) {
-        return <Square value={i} />;
+        return <Square value={squares[i]} onClick={() => handleClick(i)} />;
     }
-    // function renderSquare(i) {
-    //     return <Square value={squares[i]} onClick={() => handleClick(i)} />;
-    // }
 
-    const status = 'Next player: 🧞‍♂️';
+    status = 'Next player:' + (xIsNext ? '🧞‍♂️' : '🧜🏻‍♀️');
 
     return (
         <div>
@@ -40,4 +48,24 @@ export default function Board() {
             </div>
         </div>
     );
+}
+
+function calculateWinner(squares) {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [2, 4, 6],
+        [0, 4, 8],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+            return squares[a];
+        }
+    }
+    return null;
 }
